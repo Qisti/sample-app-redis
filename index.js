@@ -12,6 +12,7 @@ var client = '';
 const port = process.env.PORT || 8080;
 
 Raven.config(process.env.dsn).install();
+app.use(Raven.errorHandler());
 
 // Express Middleware for serving static
 // files and parsing the request body
@@ -24,7 +25,7 @@ app.use(Raven.requestHandler());
 http.listen(port, function() {
     console.log('Server Started. Listening on *:' + port);
 });
-app.use(Raven.errorHandler());
+
 // Store people in chatroom
 var chatters = [];
 // Store messages in chatroom
