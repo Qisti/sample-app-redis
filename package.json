@@ -1,15 +1,15 @@
 {
-  "name": "my-lat",
+  "name": "simple-app-redis",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app"
   },
   "author": "Qisti",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "nodemon": "^1.18.3",

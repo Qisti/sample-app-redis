@@ -5,12 +5,13 @@ const Raven = require('raven');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const fs = require('fs');
+const config = require ('./conf/conf.js')
 var creds = '';
 const redis = require('redis');
 var client = '';
 const port = process.env.PORT || 8080;
 
-Raven.config('https://e1ad5c259609415abc4bc2d13ec22d6b@sentry.io/1247754').install();
+Raven.config(process.env.dsn).install();
 
 // Express Middleware for serving static
 // files and parsing the request body
@@ -113,7 +114,7 @@ app.get('/get_chatters', function(req, res) {
 
 app.get('*', function(req, res) {
   Raven.captureException("ERR");
-  res.send("Bad Gateway")
+  res.send("Bad Gateway");
 });
 
 // Socket Connection
