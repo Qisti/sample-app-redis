@@ -1,23 +1,29 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const Raven = require('raven');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const fs = require('fs');
 var creds = '';
-var redis = require('redis');
+const redis = require('redis');
 var client = '';
-var port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
+
+Raven.config('https://e1ad5c259609415abc4bc2d13ec22d6b@sentry.io/1247754').install();
+
 // Express Middleware for serving static
 // files and parsing the request body
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(Raven.requestHandler());
 // Start the Server
 http.listen(port, function() {
     console.log('Server Started. Listening on *:' + port);
 });
+app.use(Raven.errorHandler());
 // Store people in chatroom
 var chatters = [];
 // Store messages in chatroom
@@ -103,6 +109,11 @@ app.get('/get_messages', function(req, res) {
 // API - Get Chatters
 app.get('/get_chatters', function(req, res) {
   res.send(chatters);
+});
+
+app.get('*', function(req, res) {
+  Raven.captureException("ERR");
+  res.send("Bad Gateway")
 });
 
 // Socket Connection
